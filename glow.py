@@ -95,7 +95,7 @@ def fetch_dataloader(args, train=True, data_dependent_init=False):
     dataset = {'mnist': MNIST, 'celeba': CelebA}[args.dataset]
 
     # load the specific dataset
-    dataset = dataset(root=args.data_dir, train=train, transform=transforms)
+    dataset = dataset(root=args.data_dir, train=train, transform=transforms, download=True)
 
     if args.mini_data_size:
         dataset.data = dataset.data[:args.mini_data_size]
@@ -739,10 +739,9 @@ if __name__ == '__main__':
             with open(config_path, 'a') as f:
                 print(config, file=f)
 
-    if args.train:
-        # run data dependent init and train
-        data_dependent_init(model, args)
-        train_and_evaluate(model, train_dataloader, test_dataloader, optimizer, writer, args)
+    # run data dependent init and train
+    data_dependent_init(model, args)
+    train_and_evaluate(model, train_dataloader, test_dataloader, optimizer, writer, args)
 
     if args.evaluate:
         logprob_mean, logprob_std = evaluate(model, test_dataloader, args)
